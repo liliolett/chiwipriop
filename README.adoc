@@ -1,0 +1,55 @@
+Chicken Wing Price Optimizer
+============================
+:imagesdir: img
+:toc:       preamble
+
+This small program finds the best way to partition any number of chicken nuggets so that the price is as low as possible according to https://www.buzzfeednews.com/article/juliareinstein/that-math-you-said-youd-never-use-in-real-life-is-now-being[this unique pricing structure] - you know, if you're ever in the area.
+
+Of course, you can use it for any similar problem as well.
+
+
+== Concept
+
+The CWPO uses a simple dynamic programming approach based on the observation that one only has to consider binary partitions so long as the optimal solution has already been found for all possible subsets.
+For example, if we know that a pair of wings is cheaper than two individual ones then for a total of three wings we only have to consider the partitions `{1, 2}` and `{3}` but not `{1, 1, 1}` since `{1, {1, 1}} ≍ {1, 2}` is guaranteed to be cheaper.
+
+Because the number of binary partitions for any given number of wings is proportional to that number and all of these partitions are evaluated for every number of wings below the maximum, the complexity of finding the optimal partition for `n` wings is `O(n²)`.
+
+
+== Build Instructions
+
+The CWPO requires C++14 and no special compiler flags.
+
+An example compiler invocation would be
+
+[source,bash]
+----
+g++ cwpo.cpp -o cwpo -O3
+----
+
+
+== Usage
+
+The CWPO finds the best price for all serving sizes up to some maximum value which must be specified as command line argument. +
+The menu of available servings and their prices is read from stdin.
+For an example of the syntax see `menu.csv`. +
+The results are written to stdout.
+
+Thus, a typical invocation of the CWPO might look like this:
+
+[source,bash]
+----
+./cwpo 1000 < menu.csv > results.csv
+----
+
+
+== Results
+
+In addition to the CWPO code this repo also includes the optimal partitions up to a maximum of 1000 wings. +
+`results.csv` contains the raw data, `results.ods` also includes some analysis of that data such as shown in the following charts:
+
+.Price per wing using the optimal partition for up to 1000 wings
+image::price-per-wing-to-1000.png[]
+
+.Price per wing using the optimal partition for up to 100 wings
+image::price-per-wing-to-100.png[]
