@@ -1,6 +1,5 @@
-#include <algorithm>
 #include <iostream>
-#include <numeric>
+#include <limits>
 #include <vector>
 
 
@@ -63,16 +62,6 @@ int main(int argc, char* argv[]) {
 
 	// Initialize calculation data ========================================
 
-	// Smallest serving size
-	WingCountT min_num_wings = std::min_element(
-			menu.begin(),
-			menu.end(),
-			[](const auto& a, const auto& b) {
-				return a.num_wings < b.num_wings;
-				}
-			)
-			->num_wings;
-
 	// Highest possible price used when a price has not been calculated yet
 	// or is not defined
 	constexpr PriceT no_price = std::numeric_limits<PriceT>::max();
@@ -82,9 +71,16 @@ int main(int argc, char* argv[]) {
 	// and no_price otherwise.
 	std::vector<PriceT> min_prices (max_num_wings + 1, no_price);
 
+	// Smallest serving size on the menu
+	WingCountT min_num_wings = std::numeric_limits<WingCountT>::max();
+
 	for (auto& item : menu) {
 		if (item.price < min_prices[item.num_wings]) {
 			min_prices[item.num_wings] = item.price;
+			}
+
+		if (item.num_wings < min_num_wings) {
+			min_num_wings = item.num_wings;
 			}
 
 		}
